@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Product Input Form</h1>
-    <form action="process_product.php" method="POST" enctype="multipart/form-data">
+    <form action="" method="POST" enctype="multipart/form-data">
         <!-- Product Name -->
         <label for="product_name">Product Name:</label>
         <input type="text" id="product_name" name="product_name" maxlength="255" required>

@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Brand Input Form</h1>
-    <form action="process_brand.php" method="POST" enctype="multipart/form-data">
+    <form action="" method="POST" enctype="multipart/form-data">
         <!-- Brand Name -->
         <label for="brand_name">Brand Name:</label>
         <input type="text" id="brand_name" name="brand_name" maxlength="255" required>
