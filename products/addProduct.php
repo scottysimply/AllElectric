@@ -16,8 +16,30 @@
 </head>
 <body>
     <?php
+        function showErrorBanner(string $message) {
+            // TODO: Show error message banner
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            echo "<h1>Product Successfully Added</h1>";
+            try {
+                // Show error if the dated image exists on the server
+                $uploaded_img = $_FILES['productImage'];
+                $output_image_name = $uploaded_img['tmpname'] . date("mdY-His") . ".png";
+                if (file_exists("./images/" . $output_image_name)) {
+                    showErrorBanner("The file already exists on the web server!");
+                    return;
+                }
+                // This abomination uploads the image
+                imagepng(imagecreatefromstring(file_get_contents($uploaded_img['tmpname'])), "./images/" . $output_image_name);
+                
+                $unprepared_query = "INSERT INTO products VALUES = (:brand_id, :product_type_id, :product_name, :product_desc, :prod_intended_use, :img_url)";
+
+
+            }
+            catch (Exception $ex) {
+                // NEXT TIME: Add warning banner on error
+                showErrorBanner($ex->getMessage());
+                return;
+            }
         }
 
     ?>
