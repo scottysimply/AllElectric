@@ -1,8 +1,14 @@
 <?php
 // Database connection
-$conn = new mysqli('localhost', 'root', '', 'ozarktechwebdev_all_electric');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$dsn = 'mysql:host=localhost;dbname=ozarktechwebdev_all_electric;charset=utf8mb4';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Handle form submission for adding a brand
@@ -17,10 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         move_uploaded_file($_FILES['brand_logo']['tmp_name'], $target_file);
     }
 
-    // Insert new brand
-    $sql = "INSERT INTO Brands (brand_name, brand_logo) VALUES ('$brand_name', '$brand_logo')";
-    $conn->query($sql);
-    header('Location: editBrand.php'); // Redirect to the editBrand page after adding
+    // Insert new brand using prepared statements
+    $sql = "INSERT INTO Brands (brand_name, brand_logo) VALUES (:brand_name, :brand_logo)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':brand_name' => $brand_name,
+        ':brand_logo' => $brand_logo,
+    ]);
+
+    // Redirect to the editBrand page after adding
+    header('Location: editBrand.php');
+    exit();
 }
 ?>
 
