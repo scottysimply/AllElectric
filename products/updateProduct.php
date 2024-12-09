@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Execute the statement
     if ($stmt->execute()) {
-        echo "Product updated successfully.";
+        header('Location: editProduct.php');
     } else {
         echo "Error updating product:";
     }
