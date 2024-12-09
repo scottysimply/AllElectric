@@ -79,8 +79,8 @@
             </div>
 
             <div class="form-group">
-                <label for="product-use">Product Use:</label>
-                <select name="productUse" id="product-use" class="form-control">
+                <label for="product_use">Product Use:</label>
+                <select name="product_use" id="product_use" class="form-control">
                     <?php
                         foreach ($product_uses as $product_use) {
                             echo '<option value="' . $product_use . '">' . $product_use . '</option>';
