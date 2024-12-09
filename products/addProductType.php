@@ -1,18 +1,30 @@
 <?php
 // Database connection
-$conn = new mysqli('localhost', 'root', '', 'ozarktechwebdev_all_electric');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$dsn = 'mysql:host=localhost;dbname=ozarktechwebdev_all_electric;charset=utf8mb4';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Handle form submission for adding a product type
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $product_type_name = $_POST['product_type_name'];
 
-    // Insert new product type
-    $sql = "INSERT INTO Product_Type (product_type_name) VALUES ('$product_type_name')";
-    $conn->query($sql);
-    header('Location: editProductType.php'); // Redirect to the editProductType page after adding
+    // Insert new product type using prepared statements
+    $sql = "INSERT INTO Product_Type (product_type_name) VALUES (:product_type_name)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':product_type_name' => $product_type_name,
+    ]);
+
+    // Redirect to the editProductType page after adding
+    header('Location: editProductType.php');
+    exit();
 }
 ?>
 

@@ -5,16 +5,43 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all product types from the database
-$sql = "SELECT * FROM Product_Type ORDER BY product_type_name ASC";
-$result = $conn->query($sql);
+// Handle edit form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_product_type_id'])) {
+    $product_type_id = $_POST['edit_product_type_id'];
+    $product_type_name = $_POST['product_type_name'];
+
+    // Update the product type in the database
+    $sql = "UPDATE Product_Type SET product_type_name = ? WHERE product_type_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $product_type_name, $product_type_id);
+    $stmt->execute();
+
+    header('Location: editProductType.php'); // Redirect to refresh the page after update
+    exit();
+}
 
 // Handle delete operation
 if (isset($_GET['delete'])) {
     $product_type_id = $_GET['delete'];
-    $sql = "DELETE FROM Product_Type WHERE product_type_id = $product_type_id";
-    $conn->query($sql);
+    $sql = "DELETE FROM Product_Type WHERE product_type_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $product_type_id);
+    $stmt->execute();
     header('Location: editProductType.php'); // Refresh the page after deletion
+    exit();
+}
+
+// Fetch all product types from the database
+$sql = "SELECT * FROM Product_Type ORDER BY product_type_name ASC";
+$result = $conn->query($sql);
+
+// Fetch the product type to edit (if edit is clicked)
+$product_type = null;
+if (isset($_GET['edit'])) {
+    $product_type_id = $_GET['edit'];
+    $sql = "SELECT * FROM Product_Type WHERE product_type_id = $product_type_id";
+    $result = $conn->query($sql);
+    $product_type = $result->fetch_assoc();
 }
 ?>
 
@@ -36,6 +63,7 @@ if (isset($_GET['delete'])) {
         </a>
 
         <!-- Display existing product types -->
+        <h2>Existing Product Types</h2>
         <table>
             <thead>
                 <tr>
@@ -45,7 +73,6 @@ if (isset($_GET['delete'])) {
             </thead>
             <tbody>
                 <?php
-                // Loop through the results and display them
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
@@ -66,6 +93,17 @@ if (isset($_GET['delete'])) {
                 ?>
             </tbody>
         </table>
+
+        <!-- Edit form (appears when 'Edit' is clicked) -->
+        <?php if ($product_type): ?>
+            <h2>Edit Product Type</h2>
+            <form action="editProductType.php" method="POST">
+                <input type="hidden" name="edit_product_type_id" value="<?= $product_type['product_type_id']; ?>">
+                <label for="product_type_name">Product Type Name:</label>
+                <input type="text" id="product_type_name" name="product_type_name" value="<?= htmlspecialchars($product_type['product_type_name']); ?>" required>
+                <button type="submit">Update Product Type</button>
+            </form>
+        <?php endif; ?>
     </div>
 </body>
 </html>

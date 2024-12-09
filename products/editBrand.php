@@ -1,8 +1,14 @@
 <?php
 // Database connection
-$conn = new mysqli('localhost', 'root', '', 'ozarktechwebdev_all_electric');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$dsn = 'mysql:host=localhost;dbname=ozarktechwebdev_all_electric;charset=utf8mb4';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO($dsn, $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Handle form submission for editing brand
@@ -21,21 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_brand_id'])) {
     }
 
     // Update the brand information
-    $sql = "UPDATE Brands SET brand_name = '$brand_name', brand_logo = '$brand_logo' WHERE brand_id = '$brand_id'";
-    $conn->query($sql);
+    $sql = "UPDATE Brands SET brand_name = :brand_name, brand_logo = :brand_logo WHERE brand_id = :brand_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':brand_name' => $brand_name,
+        ':brand_logo' => $brand_logo,
+        ':brand_id' => $brand_id,
+    ]);
+
     header('Location: editBrand.php'); // Redirect after update
+    exit();
 }
 
 // Handle delete brand request
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
-    $sql = "DELETE FROM Brands WHERE brand_id = $delete_id";
-    $conn->query($sql);
+    $sql = "DELETE FROM Brands WHERE brand_id = :brand_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':brand_id' => $delete_id]);
+
     header('Location: editBrand.php'); // Redirect after deletion
+    exit();
 }
 
 // Fetch all brands for listing, ordered alphabetically by brand_name
-$brands = $conn->query("SELECT * FROM Brands ORDER BY brand_name ASC");
+$sql = "SELECT * FROM Brands ORDER BY brand_name ASC";
+$stmt = $pdo->query($sql);
+$brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -54,13 +72,13 @@ $brands = $conn->query("SELECT * FROM Brands ORDER BY brand_name ASC");
         <!-- Brand List -->
         <h2>Existing Brands</h2>
         <ul>
-            <?php while ($brand = $brands->fetch_assoc()): ?>
+            <?php foreach ($brands as $brand): ?>
                 <li>
-                    <?= $brand['brand_name']; ?> 
+                    <?= htmlspecialchars($brand['brand_name']); ?> 
                     <a href="editBrand.php?edit=<?= $brand['brand_id']; ?>">Edit</a>
                     <a href="editBrand.php?delete=<?= $brand['brand_id']; ?>" onclick="return confirm('Are you sure you want to delete this brand?');">Delete</a>
                 </li>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
         </ul>
 
         <!-- Button to Add Brand -->
@@ -72,27 +90,31 @@ $brands = $conn->query("SELECT * FROM Brands ORDER BY brand_name ASC");
         <?php if (isset($_GET['edit'])): ?>
             <?php 
                 $edit_id = $_GET['edit'];
-                $result = $conn->query("SELECT * FROM Brands WHERE brand_id = $edit_id");
-                $brand = $result->fetch_assoc();
+                $sql = "SELECT * FROM Brands WHERE brand_id = :brand_id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([':brand_id' => $edit_id]);
+                $brand = $stmt->fetch(PDO::FETCH_ASSOC);
             ?>
-            <h2>Edit Brand: <?= $brand['brand_name']; ?></h2>
-            <!-- Edit Form -->
-            <form action="editBrand.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="edit_brand_id" value="<?= $brand['brand_id']; ?>">
+            <?php if ($brand): ?>
+                <h2>Edit Brand: <?= htmlspecialchars($brand['brand_name']); ?></h2>
+                <!-- Edit Form -->
+                <form action="editBrand.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="edit_brand_id" value="<?= $brand['brand_id']; ?>">
 
-                <label for="brand_name">Brand Name:</label>
-                <input type="text" id="brand_name" name="brand_name" value="<?= $brand['brand_name']; ?>" required>
+                    <label for="brand_name">Brand Name:</label>
+                    <input type="text" id="brand_name" name="brand_name" value="<?= htmlspecialchars($brand['brand_name']); ?>" required>
 
-                <label for="brand_logo">Brand Logo:</label>
-                <input type="file" id="brand_logo" name="brand_logo">
-                <input type="hidden" name="existing_logo" value="<?= $brand['brand_logo']; ?>">
+                    <label for="brand_logo">Brand Logo:</label>
+                    <input type="file" id="brand_logo" name="brand_logo">
+                    <input type="hidden" name="existing_logo" value="<?= htmlspecialchars($brand['brand_logo']); ?>">
 
-                <?php if ($brand['brand_logo']): ?>
-                    <p>Current Logo: <?= $brand['brand_logo']; ?></p>
-                <?php endif; ?>
+                    <?php if ($brand['brand_logo']): ?>
+                        <p>Current Logo: <?= htmlspecialchars($brand['brand_logo']); ?></p>
+                    <?php endif; ?>
 
-                <button type="submit">Update Brand</button>
-            </form>
+                    <button type="submit">Update Brand</button>
+                </form>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </body>
