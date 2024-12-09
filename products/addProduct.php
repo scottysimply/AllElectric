@@ -13,6 +13,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Product</title>
+    <style href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></style>
+    <style href="styles.css"></style>
 </head>
 <body>
     <?php
@@ -35,6 +37,7 @@
                     return; 
                 }
                 
+                // try uploading the image
                 $unprepared_query = "INSERT INTO products (brand_id, product_type_id, product_name, product_desc, product_intended_use, product_image)VALUES (:brand_id, :product_type_id, :product_name, :product_desc, :product_intended_use, :img_url)";
                 $prepared_statement = $pdo->prepare($unprepared_query);
                 $prepared_statement->execute([':brand_id' => $_POST['brand'], ':product_type_id' => $_POST['productType'], ':product_name' => $_POST['productName'], ':product_desc' => $_POST['productType'], ':product_intended_use' => $_POST['productUse'], ':img_url' => "./images/$output_image_name"]);
