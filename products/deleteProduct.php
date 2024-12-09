@@ -1,11 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<?php
+include 'productDb.php';
+
+if (isset($_GET['id'])) {
     
-</body>
-</html>
+    $product_id = $_GET['id'];
+    echo "here";
+    $sql = "DELETE FROM products WHERE product_id = :product_id";
+
+    if ($stmt = $pdo->prepare($sql)) {
+        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            echo "Product deleted successfully.";
+            header("Location: showProducts.php");
+        } else {
+            echo "Error deleting product: " . $stmt->errorInfo()[2];
+        }
+    } else {
+        echo "Error preparing statement: " . $pdo->errorInfo()[2];
+    }
+
+    $pdo = null;
+} else {
+    echo "No product ID provided.";
+}
+?>
