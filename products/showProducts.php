@@ -31,6 +31,7 @@ include 'productDb.php';
                     <th>Product Intended Use</th>
                     <th>Product Image</th>
                     <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +45,7 @@ include 'productDb.php';
                         <td><?php echo htmlspecialchars($product['product_intended_use']); ?></td>
                         <td><img src="<?php echo htmlspecialchars($product['product_image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" width="100"></td>
                         <td><a href="editProduct.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>&brand_id=<?php echo htmlspecialchars($product['brand_id']); ?>&product_type_id=<?php echo htmlspecialchars($product['product_type_id']); ?>" class="btn btn-primary btn-sm">Edit</a></td>
+                        <td><a href="deleteProduct.php?id=<?php echo htmlspecialchars($product['product_id']); ?>" class="btn btn-danger btn-sm">Delete</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
