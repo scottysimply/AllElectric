@@ -43,7 +43,7 @@ include 'productDb.php';
                         <td><?php echo htmlspecialchars($product['product_desc']); ?></td>
                         <td><?php echo htmlspecialchars($product['product_intended_use']); ?></td>
                         <td><img src="<?php echo htmlspecialchars($product['product_image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" width="100"></td>
-                        <td><a href="editProduct.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>" class="btn btn-primary btn-sm">Edit</a></td>
+                        <td><a href="editProduct.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>&brand_id=<?php echo htmlspecialchars($product['brand_id']); ?>&product_type_id=<?php echo htmlspecialchars($product['product_type_id']); ?>" class="btn btn-primary btn-sm">Edit</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

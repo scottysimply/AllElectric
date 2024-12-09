@@ -11,7 +11,11 @@
         <h1 class="mb-4">Edit Product</h1>
         <?php
         include 'productDb.php';
-
+        $product_type_query = "SELECT * FROM product_type";
+        $brand_query = "SELECT * FROM brands";
+        $product_type_results = $pdo->query($product_type_query)->fetchAll(PDO::FETCH_ASSOC);
+        $brand_results = $pdo->query($brand_query)->fetchAll();
+        $product_uses = ['Commercial', 'Residential'];
         if (isset($_GET['product_id'])) {
             $product_id = $_GET['product_id'];
             $query = "SELECT * FROM products WHERE product_id = :product_id";
@@ -20,19 +24,48 @@
             $stmt->execute();
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+        if (isset($_GET['brand_id'])) {
+            $brand_id = $_GET['brand_id'];
+            $query = "SELECT * FROM brands WHERE brand_id = :brand_id";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':brand_id', $brand_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $brand = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        if (isset($_GET['product_type_id'])) {
+            $product_type_id = $_GET['product_type_id'];
+            $query = "SELECT * FROM product_type WHERE product_type_id = :product_type_id";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':product_type_id', $product_type_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $product_type = $stmt->fetch(PDO::FETCH_ASSOC);
+        }  
+        $product_uses = ['Commercial', 'Residential'];
         ?>
 
         <form action="updateProduct.php" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="product_id" placeholder="<?php echo htmlspecialchars($product['product_id']); ?>">
+            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['product_id']); ?>">
 
             <div class="form-group">
-                <label for="brand_id">Brand ID:</label>
-                <input type="text" class="form-control" id="brand_id" name="brand_id" placeholder="<?php echo htmlspecialchars($product['brand_id']); ?>">
+                <label for="brand">Brand:</label>
+                <select name="brand" id="brand" class="form-control">
+                    <?php
+                        foreach ($brand_results as $brand) {
+                            echo '<option value="' . $brand['brand_id'] . '">' . $brand['brand_name'] . '</option>';
+                        }
+                    ?>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="product_type_id">Product Type ID:</label>
-                <input type="text" class="form-control" id="product_type_id" name="product_type_id" placeholder="<?php echo htmlspecialchars($product['product_type_id']); ?>">
+                <label for="product-type">Product Type:</label>
+                <select name="productType" id="product-type" class="form-control">
+                    <?php
+                        foreach ($product_type_results as $product_type) {
+                            echo '<option value="' . $product_type['product_type_id'] . '">' . $product_type['product_type_name'] . '</option>';
+                        }
+                    ?>
+                </select>
             </div>
 
             <div class="form-group">
@@ -46,8 +79,14 @@
             </div>
 
             <div class="form-group">
-                <label for="product_intended_use">Product Intended Use:</label>
-                <textarea class="form-control" id="product_intended_use" name="product_intended_use" placeholder="<?php echo htmlspecialchars($product['product_intended_use']); ?>"></textarea>
+                <label for="product-use">Product Use:</label>
+                <select name="productUse" id="product-use" class="form-control">
+                    <?php
+                        foreach ($product_uses as $product_use) {
+                            echo '<option value="' . $product_use . '">' . $product_use . '</option>';
+                        }
+                    ?>
+                </select>
             </div>
 
             <div class="form-group">
