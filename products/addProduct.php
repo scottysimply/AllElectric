@@ -13,8 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Product</title>
-    <style href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></style>
-    <style href="styles.css"></style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
     <?php
@@ -59,33 +58,43 @@
         }
 
     ?>
-    <form method="POST" enctype="multipart/form-data">
-
-        <select name="brand" id="brand">
-            <?php
-                foreach ($brand_results as $brand) {
-                    echo'<option value=' . $brand['brand_id'] . '>' . $brand['brand_name'] . '</option>';
-                }
-            ?>
-        </select>
-        <select name="productType" id="product-type">
-            <?php
-                foreach ($product_type_results as $product_type) {
-                    echo'<option value=' . $product_type['product_type_id'] . '>' . $product_type['product_type_name'] . '</option>';
-                }
-            ?>
-        </select>
-        <input type="text" name="productName" id="product-name">
-        <input type="text" name="productDesc" id="product-desc">
-        <select name="productUse" id="product-use">
-            <?php
-                foreach ($product_uses as $product_use) {
-                    echo "<option value=$product_use>$product_use</option>";
-                }
-            ?>
-        </select>
-        <input type="file" name="productImage" id="product-image">
-        <input type="submit" value="Add Product">
-    </form>
+    <div class="mt-5 container w-25">
+        <h1 class="text-center">Add Product</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label class="form-label" for="brand">Brand</label><br/>
+            <select name="brand" id="brand" class="w-100 mb-3">
+                <?php
+                    foreach ($brand_results as $brand) {
+                        echo'<option value=' . $brand['brand_id'] . '>' . $brand['brand_name'] . '</option>';
+                    }
+                ?>
+            </select><br/>
+            <label class="form-label" for="product-type">Product Type</label><br/>
+            <select name="productType" id="product-type" class="w-100 mb-3">
+                <?php
+                    foreach ($product_type_results as $product_type) {
+                        echo'<option value=' . $product_type['product_type_id'] . '>' . $product_type['product_type_name'] . '</option>';
+                    }
+                ?>
+            </select><br/>
+            <label class="form-label" for="product-name">Product Name</label><br/>
+            <input type="text" name="productName" id="product-name" class="w-100 mb-3"><br/>
+            <label class="form-label" for="product-desc">Product Description</label><br/>
+            <input type="text" name="productDesc" id="product-desc" class="w-100 mb-3"><br/>
+            <label class="form-label" for="product-use">Product Usecase</label><br/>
+            <select name="productUse" id="product-use" class="w-100 mb-3">
+                <?php
+                    foreach ($product_uses as $product_use) {
+                        echo "<option value=$product_use>$product_use</option>";
+                    }
+                ?>
+            </select><br/>
+            <label class="form-label" for="product-image">Product Preview</label><br/>
+            <input type="file" name="productImage" id="product-image" class="form-control"><br/>
+            <input type="submit" value="Add Product">
+        </form>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
