@@ -51,7 +51,8 @@
                 <select name="brand" id="brand" class="form-control">
                     <?php
                         foreach ($brand_results as $brand) {
-                            echo '<option value="' . $brand['brand_id'] . '">' . $brand['brand_name'] . '</option>';
+                            $selected = ($brand['brand_id'] == $product['brand_id']) ? 'selected' : '';
+                            echo '<option value="' . $brand['brand_id'] . '" ' . $selected . '>' . $brand['brand_name'] . '</option>';
                         }
                     ?>
                 </select>
@@ -62,7 +63,8 @@
                 <select name="productType" id="product-type" class="form-control">
                     <?php
                         foreach ($product_type_results as $product_type) {
-                            echo '<option value="' . $product_type['product_type_id'] . '">' . $product_type['product_type_name'] . '</option>';
+                            $selected = ($product_type['product_type_id'] == $product['product_type_id']) ? 'selected' : '';
+                            echo '<option value="' . $product_type['product_type_id'] . '" ' . $selected . '>' . $product_type['product_type_name'] . '</option>';
                         }
                     ?>
                 </select>
