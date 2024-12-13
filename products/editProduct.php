@@ -85,7 +85,8 @@
                 <select name="product_use" id="product_use" class="form-control">
                     <?php
                         foreach ($product_uses as $product_use) {
-                            echo '<option value="' . $product_use . '">' . $product_use . '</option>';
+                            $selected = ($product_use == $product['product_intended_use']) ? 'selected' : '';
+                            echo '<option value="' . $product_use . '" ' . $selected . '>' . $product_use . '</option>';
                         }
                     ?>
                 </select>

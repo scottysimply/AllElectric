@@ -1,39 +1,60 @@
 <?php
-//include database connection
+// Include database connection
 require_once 'productDb.php';
 
-//check if form is submitted
+// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_id = $_POST['product_id'];
-    $brand_id = $_POST['brand'];
-    $product_type_id = $_POST['productType'];
-    $product_name = $_POST['product_name'];
-    $product_desc = $_POST['product_desc'];
-    $product_use = $_POST['product_use'];
-    
-    
-    // Handle file upload
+    $updates = [];
+    $params = [];
+
+    //check each field and add it to the updates if it's provided
+    if (!empty($_POST['brand'])) {
+        $updates[] = "brand_id = ?";
+        $params[] = $_POST['brand'];
+    }
+
+    if (!empty($_POST['productType'])) {
+        $updates[] = "product_type_id = ?";
+        $params[] = $_POST['productType'];
+    }
+
+    if (!empty($_POST['product_name'])) {
+        $updates[] = "product_name = ?";
+        $params[] = $_POST['product_name'];
+    }
+
+    if (!empty($_POST['product_desc'])) {
+        $updates[] = "product_desc = ?";
+        $params[] = $_POST['product_desc'];
+    }
+
+    if (!empty($_POST['product_use'])) {
+        $updates[] = "product_intended_use = ?";
+        $params[] = $_POST['product_use'];
+    }
+
+    //handle image upload
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
         $product_image_name = $_FILES["product_image"]["name"];
         $target_dir = "./uploaded_images/";
         $target_file = $target_dir . basename($_FILES["product_image"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Check if image file is a actual image or fake image
+        //validate image
         $check = getimagesize($_FILES["product_image"]["tmp_name"]);
         if ($check !== false) {
-            // Check file size (5MB maximum)
             if ($_FILES["product_image"]["size"] <= 5000000) {
-                // Allow certain file formats
                 if (in_array($imageFileType, ["jpg", "jpeg", "png"])) {
                     if (move_uploaded_file($_FILES["product_image"]["tmp_name"], $target_file)) {
-                        $product_image = $target_file;
+                        $updates[] = "product_image = ?";
+                        $params[] = $target_file; // Save the file path
                     } else {
                         echo "Sorry, there was an error uploading your file.";
                         exit;
                     }
                 } else {
-                    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                    echo "Sorry, only JPG, JPEG, and PNG files are allowed.";
                     exit;
                 }
             } else {
@@ -44,31 +65,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "File is not an image.";
             exit;
         }
-    } else {
-        $product_image = null; // No new image uploaded
     }
 
-    $query = "UPDATE products SET brand_id = ?, product_type_id = ?, product_name = ?, product_desc = ?, product_intended_use = ?, product_image = ? WHERE product_id = ?";
-    
-    
-    $stmt = $pdo->prepare($query);
-    
-    
-    $stmt->bindValue(1, $brand_id, PDO::PARAM_INT);
-    $stmt->bindValue(2, $product_type_id, PDO::PARAM_INT);
-    $stmt->bindValue(3, $product_name, PDO::PARAM_STR);
-    $stmt->bindValue(4, $product_desc, PDO::PARAM_STR);
-    $stmt->bindValue(5, $product_use, PDO::PARAM_STR);
-    $stmt->bindValue(6, $product_image_name, PDO::PARAM_STR);
-    $stmt->bindValue(7, $product_id, PDO::PARAM_INT);
-    
-    
+    //add productID param
+    $params[] = $product_id;
 
-    // Execute the statement
-    if ($stmt->execute()) {
-        header('Location: editProduct.php');
+    //build the query only if there are things to update
+    if (!empty($updates)) {
+        $query = "UPDATE products SET " . implode(', ', $updates) . " WHERE product_id = ?";
+        $stmt = $pdo->prepare($query);
+
+        //execute the statement with the parameters
+        if ($stmt->execute($params)) {
+            header('Location: editProduct.php'); //go back to edit product
+            exit;
+        } else {
+            echo "Error updating product.";
+        }
     } else {
-        echo "Error updating product:";
+        echo "No fields to update.";
     }
 }
 ?>
