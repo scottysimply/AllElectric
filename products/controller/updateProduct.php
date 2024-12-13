@@ -1,6 +1,6 @@
 <?php
 // Include database connection
-require_once 'productDb.php';
+require_once '../model/productDb.php';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //handle image upload
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
         $product_image_name = $_FILES["product_image"]["name"];
-        $target_dir = "./uploaded_images/";
+        $target_dir = "../uploaded_imagds/";
         $target_file = $target_dir . basename($_FILES["product_image"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //execute the statement with the parameters
         if ($stmt->execute($params)) {
-            header('Location: editProduct.php'); //go back to edit product
+            header('Location: ../view/editProduct.php'); //go back to edit product
             exit;
         } else {
             echo "Error updating product.";

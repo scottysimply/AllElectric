@@ -1,5 +1,5 @@
 <?php
-include 'productDb.php';
+include '../model/productDb.php';
     $product_results = [];
     try {
         $stmt = $pdo->query('SELECT * FROM products');
@@ -45,12 +45,13 @@ include 'productDb.php';
                         <td><?php echo htmlspecialchars($product['product_intended_use']); ?></td>
                         <td><img src="<?php echo htmlspecialchars($product['product_image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" width="100"></td>
                         <td><a href="editProduct.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>&brand_id=<?php echo htmlspecialchars($product['brand_id']); ?>&product_type_id=<?php echo htmlspecialchars($product['product_type_id']); ?>" class="btn btn-primary btn-sm">Edit</a></td>
-                        <td><a href="deleteProduct.php?id=<?php echo htmlspecialchars($product['product_id']); ?>" class="btn btn-danger btn-sm">Delete</a></td>
+                        <td><a href="../controller/deleteProduct.php?id=<?php echo htmlspecialchars($product['product_id']); ?>" class="btn btn-danger btn-sm">Delete</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
         <a href="addProduct.php" class="btn btn-success mb-4">Add New Product</a>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

@@ -1,5 +1,5 @@
 <?php
-    include_once 'productDb.php';
+    include_once '../model/productDb.php';
     $product_type_query = "SELECT * FROM product_type";
     $brand_query = "SELECT * FROM brands";
     $product_type_results = $pdo->query($product_type_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -26,12 +26,12 @@
                 // Show error if the dated image exists on the server
                 $uploaded_img = $_FILES['productImage'];
                 $output_image_name = pathinfo($uploaded_img['name'], PATHINFO_FILENAME) . date("mdY-His") . ".png";
-                if (file_exists("./images/" . $output_image_name)) {
+                if (file_exists("../images/" . $output_image_name)) {
                     showErrorBanner("The file already exists on the web server!");
                     return;
                 }
                 // This abomination uploads the image
-                if (!imagepng(imagecreatefromstring(file_get_contents($uploaded_img['tmp_name'])), './images/' . $output_image_name)) {
+                if (!imagepng(imagecreatefromstring(file_get_contents($uploaded_img['tmp_name'])), '../images/' . $output_image_name)) {
                     showErrorBanner("The file could not be uploaded");
                     return; 
                 }
@@ -39,7 +39,7 @@
                 // try uploading the image
                 $unprepared_query = "INSERT INTO products (brand_id, product_type_id, product_name, product_desc, product_intended_use, product_image)VALUES (:brand_id, :product_type_id, :product_name, :product_desc, :product_intended_use, :img_url)";
                 $prepared_statement = $pdo->prepare($unprepared_query);
-                $prepared_statement->execute([':brand_id' => $_POST['brand'], ':product_type_id' => $_POST['productType'], ':product_name' => $_POST['productName'], ':product_desc' => $_POST['productType'], ':product_intended_use' => $_POST['productUse'], ':img_url' => "./images/$output_image_name"]);
+                $prepared_statement->execute([':brand_id' => $_POST['brand'], ':product_type_id' => $_POST['productType'], ':product_name' => $_POST['productName'], ':product_desc' => $_POST['productType'], ':product_intended_use' => $_POST['productUse'], ':img_url' => "../images/$output_image_name"]);
         
                 // if control got to here, then it executed successfully. unset post values
                 unset($_POST['brand']);

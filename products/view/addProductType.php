@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]);
 
     // Redirect to the editProductType page after adding
-    header('Location: editProductType.php');
+    header('Location: ./editProductType.php');
     exit();
 }
 ?>
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product Type</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="container">
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
 
         <!-- Button to go back to the editProductType.php page -->
-        <a href="editProductType.php">
+        <a href="./editProductType.php">
             <button type="button">Back to Product Type List</button>
         </a>
     </div>

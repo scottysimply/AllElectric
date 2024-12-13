@@ -10,7 +10,7 @@
     <div class="container mt-5">
         <h1 class="mb-4">Edit Product</h1>
         <?php
-        include 'productDb.php';
+        include '../model/productDb.php';
         $product_type_query = "SELECT * FROM product_type";
         $brand_query = "SELECT * FROM brands";
         $product_type_results = $pdo->query($product_type_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -43,7 +43,7 @@
         $product_uses = ['Commercial', 'Residential'];
         ?>
 
-        <form action="updateProduct.php" method="post" enctype="multipart/form-data">
+        <form action="../controller/updateProduct.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['product_id']); ?>">
 
             <div class="form-group">

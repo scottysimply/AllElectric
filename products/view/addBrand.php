@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]);
 
     // Redirect to the editBrand page after adding
-    header('Location: editBrand.php');
+    header('Location: ./editBrand.php');
     exit();
 }
 ?>
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Brand</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="container">
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
 
         <!-- Button to go back to the editBrand.php page -->
-        <a href="editBrand.php">
+        <a href="./editBrand.php">
             <button type="button">Back to Brand List</button>
         </a>
     </div>

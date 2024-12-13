@@ -63,7 +63,7 @@ $brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Brands</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="container">
@@ -82,7 +82,7 @@ $brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </ul>
 
         <!-- Button to Add Brand -->
-        <a href="addBrand.php">
+        <a href="./addBrand.php">
             <button>Add Brand</button>
         </a>
 
@@ -98,7 +98,7 @@ $brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php if ($brand): ?>
                 <h2>Edit Brand: <?= htmlspecialchars($brand['brand_name']); ?></h2>
                 <!-- Edit Form -->
-                <form action="editBrand.php" method="POST" enctype="multipart/form-data">
+                <form action="./editBrand.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="edit_brand_id" value="<?= $brand['brand_id']; ?>">
 
                     <label for="brand_name">Brand Name:</label>

@@ -1,5 +1,5 @@
 <?php
-include 'productDb.php';
+include '../model/productDb.php';
 
 if (isset($_GET['id'])) {
     
@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
 
         if ($stmt->execute()) {
             echo "Product deleted successfully.";
-            header("Location: showProducts.php");
+            header("Location: ../view/showProducts.php");
         } else {
             echo "Error deleting product: " . $stmt->errorInfo()[2];
         }
